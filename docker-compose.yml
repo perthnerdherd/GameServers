@@ -3,14 +3,14 @@ version: "3.9"
 services:
   prophunt:
     image: ethorbit/srcds-server:latest   # Combined autoupdating srcds installation
+    network_mode: host
     volumes:
-      - prophunt-volume:/home/srcds/server # retain volume per service to improve startup time. If changing game signifiantly, remove volume between reboots to allow recreate
-    ports:
-      - "27015:27015" # HOST:CONTAINER - for source games should always be #####:27016, however host port can change, and should be reflected in the game URL
+      - /opt/perthnerdherd_prophunt:/home/srcds/server # retain volume per service to improve startup time. If changing game signifiantly, remove volume between reboots to allow recreate
+    # ports:
+    #  - "27015:27015" # HOST:CONTAINER - for source games should always be #####:27016, however host port can change, and should be reflected in the game URL
     environment:
       - SRCDS_APPID=4020  # Steam App ID. Check if game has a dedicated server version, eg 4000 is GMOD, 4020 is the GMOD Dedicated Server
-      - SRCDS_RUN_ARGS='+gamemode "prop_hunt" +host_workshop_collection 657069545 +port 27015 +ticrate 66 +map ph_office' # Any runtime args for the server
+      - SRCDS_RUN_ARGS='+gamemode "prop_hunt" +host_workshop_collection 657069545 +sv_hostname "Perth Nerd Herd - Garrys Mod - Labrat Pack" +port 27015 +ticrate 66 +map gm_flatgrass' # Any runtime args for the server
+    ## For the Prop Hunt server, the volume is mounted to the host to allow for ULX (admin console) config via updating the garrysmod/settings/users.txt file as per https://forums.ulyssesmod.net/index.php?topic=5766.0
+    ## This avoids exposing rcon unnecessarily and causing security risks
 
-
-volumes:
-  prophunt-volume:
